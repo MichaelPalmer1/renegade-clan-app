@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            storeFile file('../key_store.jks')
+            keyAlias 'rc_app'
+            storePassword '******'
+            keyPassword '******'
+
+            File propsFile = file('../secure.properties');
+            if (propsFile.exists()) {
+                Properties props = new Properties();
+                props.load(new FileInputStream(propsFile))
+                storePassword props.getProperty('key.store.password')
+                keyPassword props.getProperty('key.alias.password')
+            } else {
+                storePassword System.getenv('STORE_PASSWORD')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+    }
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
+    defaultConfig {
+        applicationId "com.renegade.rc"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1712107
+        versionName '1.0.7'
+        signingConfig signingConfigs.config
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //    compile 'com.google.android.gms:play-services-base:6.5.+'
+}

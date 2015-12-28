@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <string name="ga_trackingId">UA-58043202-1</string>
+
+    <string name="ga_logLevel">verbose</string>
+
+    <integer name="ga_dispatchPeriod">30</integer>
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <string name="com.renegade.rc">RC</string>
+
+    <string name="com.renegade.rc.MainActivity">Main Activity</string>
+
+    <screenName name="com.renegade.rc.StatusFragment">Server Status</screenName>
+
+    <screenName name="com.renegade.rc.TSFragment">TeamSpeak</screenName>
+
+    <screenName name="com.renegade.rc.MapCycleFragment">Map Cycle</screenName>
+
+</resources>

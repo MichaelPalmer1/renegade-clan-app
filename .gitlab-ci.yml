@@ -1,0 +1,6 @@
+before_script:
+  - export ANDROID_HOME="$ANDROID_HOME_DIR"
+
+build_app:
+  type: build
+  script: ./gradlew assembleRelease

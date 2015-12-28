@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="categoryStatus">Server Status</string>
+    <string name="categoryTS">TeamSpeak</string>
+    <string name="categoryMapCycle">Map Cycle</string>
+    <string name="actionRefresh">Refresh</string>
+    <string name="actionLoad">Load</string>
+
+    <string name="app_name">Renegade Clan</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_section1">Status</string>
+    <string name="title_section2">TeamSpeak</string>
+    <string name="title_section3">Cycle</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="mapImageDescription">Map Image</string>
+    <string name="lblTimelimit">Timelimit</string>
+    <string name="lblMapDesc">Description</string>
+    <string name="lblNextMap">Next:</string>
+    <string name="lblCurrentMap">Map:</string>
+    <string name="lblPlayers">Players:</string>
+    <string name="lblMod">Mod:</string>
+    <string name="axisTitle">Axis</string>
+    <string name="alliesTitle">Allies</string>
+    <string name="spectatorsTitle">Spectators</string>
+    <string name="connectingTitle">Connecting</string>
+    <string name="headerName">Name</string>
+    <string name="headerXP">XP</string>
+    <string name="headerPing">Ping</string>
+    <string name="serverEmpty">Server is empty</string>
+
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+</resources>
