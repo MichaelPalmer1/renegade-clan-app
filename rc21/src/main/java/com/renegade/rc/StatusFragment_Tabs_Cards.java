@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,6 +56,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
     private TextView serverName, mapName, numPlayers, mod, nextMap;
     private ImageView mapImage;
     private SwipeRefreshLayout refreshStatus;
+    private ScrollView playerData;
     public ArrayList<Player>
             axisPlayers     = new ArrayList<>(),
             alliedPlayers   = new ArrayList<>(),
@@ -88,7 +91,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_status_tabs, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_status_tabs_cards, container, false);
 
         // Setup variables
         rowNextMap      = (TableRow)            rootView.findViewById(R.id.rowNextMap       );
@@ -103,6 +106,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
         listSpec        = (ListView)            rootView.findViewById(R.id.specListView     );
         listConn        = (ListView)            rootView.findViewById(R.id.connListView     );
         refreshStatus   = (SwipeRefreshLayout)  rootView.findViewById(R.id.refreshStatus    );
+        playerData      = (ScrollView)          rootView.findViewById(R.id.scrollPlayerData );
 
         // Set on refresh listener for swipe refresh
         refreshStatus.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -281,9 +285,14 @@ public class StatusFragment_Tabs_Cards extends Fragment {
         numPlayers.setText(String.format("%d / %s", Teams.clients, Settings.get("sv_maxclients")));
     }
 
+    public void tabSelected() {
+        playerData.fullScroll(View.FOCUS_UP);
+        refreshStatus.setRefreshing(true);
+        getServerStatus();
+    }
+
     private void fillPlayers() {
         TextView serverEmpty = (TextView) getActivity().findViewById(R.id.serverEmpty);
-        ScrollView playerData = (ScrollView) getActivity().findViewById(R.id.scrollPlayerData);
 
         // Clear players
         for(int team = 0; team < 4; team++) {
@@ -297,6 +306,21 @@ public class StatusFragment_Tabs_Cards extends Fragment {
         alliedPlayers.clear();
         specPlayers.clear();
         connPlayers.clear();
+
+        /*
+        Teams.Axis.add("Test1", "5000", "233");
+        Teams.Axis.add("Test2", "5000", "233");
+        Teams.Axis.add("Test3", "5000", "233");
+        Teams.Allies.add("Test1", "5000", "233");
+        Teams.Allies.add("Test2", "5000", "233");
+        Teams.Allies.add("Test3", "5000", "233");
+        Teams.Spectators.add("Test1", "", "233");
+        Teams.Spectators.add("Test2", "", "233");
+        Teams.Spectators.add("Test3", "", "233");
+        Teams.Connecting.add("Test1", "", "");
+        Teams.Connecting.add("Test2", "", "");
+        Teams.Connecting.add("Test3", "", "");
+        */
 
         // Check if clients are connected
         if (Teams.clients > 0) {
@@ -312,6 +336,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                 TableRow rowTeam    = new TableRow(getActivity()),
                          rowHeader  = new TableRow(getActivity()),
                          rowList    = new TableRow(getActivity());
+                CardView rowCard    = new CardView(getActivity());
 
                 switch (team) {
                     case AXIS:
@@ -321,6 +346,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                         rowTeam     = (TableRow) getActivity().findViewById(R.id.rowAxisTitle);
                         rowHeader   = (TableRow) getActivity().findViewById(R.id.rowAxisHeader);
                         rowList     = (TableRow) getActivity().findViewById(R.id.axisListRow);
+                        rowCard     = (CardView) getActivity().findViewById(R.id.card_view_axis);
                         break;
                     case ALLIES:
                         teamName    = "Allies";
@@ -329,6 +355,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                         rowTeam     = (TableRow) getActivity().findViewById(R.id.rowAlliesTitle);
                         rowHeader   = (TableRow) getActivity().findViewById(R.id.rowAlliesHeader);
                         rowList     = (TableRow) getActivity().findViewById(R.id.alliedListRow);
+                        rowCard     = (CardView) getActivity().findViewById(R.id.card_view_allies);
                         break;
                     case SPECTATOR:
                         teamName    = "Spectators";
@@ -337,6 +364,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                         rowTeam     = (TableRow) getActivity().findViewById(R.id.rowSpectatorsTitle);
                         rowHeader   = (TableRow) getActivity().findViewById(R.id.rowSpectatorsHeader);
                         rowList     = (TableRow) getActivity().findViewById(R.id.specListRow);
+                        rowCard     = (CardView) getActivity().findViewById(R.id.card_view_specs);
                         break;
                     case CONNECTING:
                         teamName    = "Connecting";
@@ -345,6 +373,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                         rowTeam     = (TableRow) getActivity().findViewById(R.id.rowConnectingTitle);
                         rowHeader   = (TableRow) getActivity().findViewById(R.id.rowConnectingHeader);
                         rowList     = (TableRow) getActivity().findViewById(R.id.connListRow);
+                        rowCard     = (CardView) getActivity().findViewById(R.id.card_view_conn);
                         break;
                 }
 
@@ -352,17 +381,17 @@ public class StatusFragment_Tabs_Cards extends Fragment {
                     rowTeam.setVisibility(VISIBLE);
                     rowHeader.setVisibility(VISIBLE);
                     rowList.setVisibility(VISIBLE);
+                    rowCard.setVisibility(VISIBLE);
                     textTeam.setText( String.format("%s (%d)", teamName, players) );
                 } else {
                     if (team == AXIS || team == ALLIES) {
                         textTeam.setText(teamName);
-                        rowHeader.setVisibility(GONE);
-                        rowList.setVisibility(GONE);
                     } else {
                         rowTeam.setVisibility(GONE);
-                        rowHeader.setVisibility(GONE);
-                        rowList.setVisibility(GONE);
+                        rowCard.setVisibility(GONE);
                     }
+                    rowHeader.setVisibility(GONE);
+                    rowList.setVisibility(GONE);
                 }
                 if (players > 0) {
                     for (int j = 0; j < players; j++) {
@@ -520,8 +549,8 @@ public class StatusFragment_Tabs_Cards extends Fragment {
 
     private void addRow(int team, TableRow tableRow, int startIndex) {
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        tableRow.setBackgroundColor(
-                getResources().getColor(R.color.primary_text_default_material_dark));
+//        tableRow.setBackgroundColor(
+//                getResources().getColor(R.color.primary_text_default_material_dark));
         getTeamTable(team).addView(tableRow, startIndex, params);
     }
 
@@ -567,7 +596,7 @@ public class StatusFragment_Tabs_Cards extends Fragment {
 
         @Override
         protected String doInBackground(String... urls) {
-            String s = "", response = "";
+            String s, response = "";
             try {
                 // Create connection
                 HttpURLConnection conn = (HttpURLConnection) new URL(urls[0]).openConnection();
@@ -668,26 +697,22 @@ public class StatusFragment_Tabs_Cards extends Fragment {
     }
 
     private class PlayerAdapter extends ArrayAdapter<Player> {
-        private final Context context;
         private final int resourceID;
-        private final ArrayList<Player> player_details;
 
         public PlayerAdapter(Context context, int resource, ArrayList<Player> list) {
             super(context, resource, list);
-
-            this.player_details = list;
-            this.context = context;
             this.resourceID = resource;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(resourceID, parent, false);
+        public View getView(int position, View rowView, ViewGroup parent) {
+            if (rowView == null)
+                rowView = LayoutInflater.from(getContext()).inflate(this.resourceID, parent, false);
+
             TextView playerName = (TextView) rowView.findViewById(R.id.playerName);
-            TextView playerXP = (TextView) rowView.findViewById(R.id.playerXP);
+            TextView playerXP   = (TextView) rowView.findViewById(R.id.playerXP);
             TextView playerPing = (TextView) rowView.findViewById(R.id.playerPing);
-            Player player = player_details.get(position);
+            Player player       = getItem(position);
 
             // Name
             playerName.setText(player.name);

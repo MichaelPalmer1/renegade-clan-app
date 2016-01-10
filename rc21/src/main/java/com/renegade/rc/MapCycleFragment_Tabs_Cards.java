@@ -1,19 +1,19 @@
 package com.renegade.rc;
 
-import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.support.v7.widget.CardView;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,10 +28,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapCycleFragment_Tabs_Cards extends Fragment {
-    public ArrayList<JSONObject> mapList = new ArrayList<>();
-    public ListView listMapCycle;
+    public ArrayList<Maps> mapList = new ArrayList<>();
+    public RecyclerView cycleRecycler;
     private DownloadJSONTask dlTask = null;
 
     @Override
@@ -43,8 +44,11 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_mapcycle, container, false);
-        listMapCycle = (ListView) rootView.findViewById(R.id.listMapCycle);
+        View rootView = inflater.inflate(R.layout.fragment_mapcycle_cards, container, false);
+        cycleRecycler = (RecyclerView) rootView.findViewById(R.id.cycleRecycler);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        cycleRecycler.setLayoutManager(llm);
 
         if (dlTask != null && dlTask.getStatus() != DownloadJSONTask.Status.FINISHED)
             dlTask.cancel(true);
@@ -71,6 +75,10 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
         }
     }
 
+    public void tabSelected() {
+        cycleRecycler.smoothScrollToPosition(0);
+    }
+
     public void processMapData(String data) {
         try {
             JSONObject json = new JSONObject(data);
@@ -79,11 +87,17 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
 
             mapList.clear();
 
-            for(int i = 0; i < cycle.length(); i++)
-                mapList.add( maps.getJSONObject( cycle.getString(i) ) );
-
-            CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.mapdetail, mapList);
-            listMapCycle.setAdapter(adapter);
+            for(int i = 0; i < cycle.length(); i++) {
+                JSONObject mapData = maps.getJSONObject( cycle.getString(i) );
+                mapList.add( new Maps(
+                        mapData.getString("bsp"),
+                        mapData.getString("map"),
+                        (mapData.has("length") && !mapData.isNull("length")) ? mapData.getInt("length") : 0,
+                        mapData.has("mapDesc") ? mapData.getString("mapDesc") : null
+                ));
+            }
+            RVAdapter adapter = new RVAdapter(mapList);
+            cycleRecycler.setAdapter(adapter);
 
         } catch (JSONException e) {
             Log.e("MapCycle_Tabs", "JSON Exception: " + e.toString());
@@ -94,7 +108,7 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
     private class DownloadJSONTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            String s = "", response = "";
+            String s, response = "";
             try {
                 // Create connection
                 HttpURLConnection conn = (HttpURLConnection) new URL(urls[0]).openConnection();
@@ -135,64 +149,81 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
         }
     }
 
-    class CustomAdapter extends ArrayAdapter<JSONObject> {
-        private final Context context;
-        private final int resourceID;
-        private final ArrayList<JSONObject> map_details;
+    class RVAdapter extends RecyclerView.Adapter<RVAdapter.MapViewHolder> {
 
-        public CustomAdapter(Context context, int resource, ArrayList<JSONObject> list) {
-            super(context, resource, list);
+        class MapViewHolder extends RecyclerView.ViewHolder {
+            CardView cardView;
+            TextView mapName;
+            ImageView mapImage;
+            TextView lblMapDesc;
+            TextView mapDesc;
+            TextView spacer;
+            TextView lblMapLength;
+            TextView mapLength;
 
-            this.map_details = list;
-            this.context = context;
-            this.resourceID = resource;
+            public MapViewHolder(View view) {
+                super(view);
+                cardView = (CardView) view.findViewById(R.id.card_view);
+                mapName = (TextView) view.findViewById(R.id.mapName);
+                mapImage = (ImageView) view.findViewById(R.id.mapImage);
+                lblMapDesc = (TextView) view.findViewById(R.id.lblDesc);
+                mapDesc = (TextView) view.findViewById(R.id.mapDesc);
+                spacer = (TextView) view.findViewById(R.id.spacer);
+                lblMapLength = (TextView) view.findViewById(R.id.lblTimelimit);
+                mapLength = (TextView) view.findViewById(R.id.mapTimelimit);
+            }
+        }
+
+        List<Maps> maps;
+
+        RVAdapter(List<Maps> maps) {
+            this.maps = maps;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(resourceID, parent, false);
-            TextView mapName = (TextView) rowView.findViewById(R.id.mapName);
-            TextView mapDesc = (TextView) rowView.findViewById(R.id.mapDesc);
-            ImageView mapImage = (ImageView) rowView.findViewById(R.id.mapImage);
-            try {
-                JSONObject json = map_details.get(position);
-                // Name
-                mapName.setText(json.getString("map"));
-                RC.color(mapName);
+        public int getItemCount() {
+            return maps.size();
+        }
 
-                Picasso.with(getActivity())
-                        .load("http://www.therenegadeclan.org/images/maps/"
-                                + json.getString("bsp") + ".png")
-                        .placeholder(R.drawable.unknown_map)
-                        .into(mapImage);
+        @Override
+        public MapViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mapdetail_cards, parent, false);
+            return new MapViewHolder(view);
+        }
 
-                // Description
-                if (json.has("mapDesc")) {
-                    mapDesc.setText(json.getString("mapDesc"));
-                    RC.color(mapDesc);
-                } else {
-                    rowView.findViewById(R.id.lblDesc).setVisibility(View.GONE);
-                    mapDesc.setVisibility(View.GONE);
-                    rowView.findViewById(R.id.spacer).setVisibility(View.GONE);
-                }
+        @Override
+        public void onBindViewHolder(MapViewHolder holder, int position) {
+            holder.mapName.setText(maps.get(position).getMap());
+            RC.color(holder.mapName);
+            Picasso.with(getActivity())
+                    .load(String.format("http://www.therenegadeclan.org/images/maps/%s.png",
+                            maps.get(position).getBsp()))
+                    .placeholder(R.drawable.unknown_map)
+                    .into(holder.mapImage);
 
-                // Time limit
-                if (json.has("length") && Integer.parseInt(json.getString("length")) > 0) {
-                    ((TextView) rowView.findViewById(R.id.mapTimelimit))
-                            .setText(String.format("%s minutes", json.getString("length")));
-                } else {
-                    rowView.findViewById(R.id.lblTimelimit).setVisibility(View.GONE);
-                    rowView.findViewById(R.id.mapTimelimit).setVisibility(View.GONE);
-                }
-
-            } catch (JSONException e) {
-                Log.e("CycleFragment_Adapter", "getView(): JSONException - " + e.toString());
-                e.printStackTrace();
+            // Description
+            if(maps.get(position).getMapDesc() != null) {
+                holder.mapDesc.setText( maps.get(position).getMapDesc() );
+                RC.color(holder.mapDesc);
+            } else {
+                holder.lblMapDesc.setVisibility(View.GONE);
+                holder.mapDesc.setVisibility(View.GONE);
+                holder.spacer.setVisibility(View.GONE);
             }
 
-            return rowView;
+            // Length
+            if(maps.get(position).getLength() > 0) {
+                holder.mapLength.setText(String.format("%d minutes",
+                        maps.get(position).getLength()));
+            } else {
+                holder.lblMapDesc.setVisibility(View.GONE);
+                holder.mapLength.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
         }
     }
 

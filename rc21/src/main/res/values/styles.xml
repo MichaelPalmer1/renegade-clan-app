@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="android:Theme" />
+    <style name="AppTheme" parent="android:Theme.Holo.Light" >
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.Small" parent="@android:style/TextAppearance.Holo.Small" />
+    <style name="AppTheme.TextAppearance.Medium" parent="@android:style/TextAppearance.Holo.Medium" />
+
 </resources>

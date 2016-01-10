@@ -25,9 +25,6 @@ import android.widget.ListView;
 //import com.google.android.gms.analytics.HitBuilders;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -125,6 +122,7 @@ public class MapCycleFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... urls) {
+            /*
             String response = "";
             DefaultHttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(urls[0]);
@@ -141,6 +139,8 @@ public class MapCycleFragment extends Fragment {
                 e.printStackTrace();
             }
             return response;
+            */
+            return "";
         }
 
         @Override

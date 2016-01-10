@@ -3,7 +3,6 @@
     tools:context="com.renegade.rc.StatusFragment_Tabs"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_material_light"
     android:orientation="vertical">
 
     <!-- Server Info -->
@@ -26,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_span="2"
                 android:gravity="center"
-                android:hint="Server Name"
+                android:hint="@string/serverName"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
 

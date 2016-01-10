@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class BansFragment_Tabs_Cards extends Fragment {
-	public ArrayList<Bans> banList = new ArrayList<>();
-	public RecyclerView bansRecycler;
+public class WarningsFragment_Tabs_Cards extends Fragment {
+	public ArrayList<Warnings> warningList = new ArrayList<>();
+	public RecyclerView warningsRecycler;
 	private DownloadJSONTask dlTask = null;
 
 	@Override
@@ -44,17 +44,17 @@ public class BansFragment_Tabs_Cards extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_bans_cards, container, false);
-		bansRecycler = (RecyclerView) rootView.findViewById(R.id.bansRecycler);
+		View rootView = inflater.inflate(R.layout.fragment_warnings_cards, container, false);
+		warningsRecycler = (RecyclerView) rootView.findViewById(R.id.warningsRecycler);
 
 		LinearLayoutManager llm = new LinearLayoutManager(getContext());
-		bansRecycler.setLayoutManager(llm);
+		warningsRecycler.setLayoutManager(llm);
 
 		if (dlTask != null && dlTask.getStatus() != DownloadJSONTask.Status.FINISHED)
 			dlTask.cancel(true);
 
 		dlTask = (DownloadJSONTask) new DownloadJSONTask()
-				.execute("http://www.therenegadeclan.org/getBans.php");
+				.execute("http://www.therenegadeclan.org/getWarnings.php");
 
 		return rootView;
 	}
@@ -62,7 +62,7 @@ public class BansFragment_Tabs_Cards extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		menu.clear();
-		inflater.inflate(R.menu.bans, menu);
+		inflater.inflate(R.menu.warnings, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -76,51 +76,42 @@ public class BansFragment_Tabs_Cards extends Fragment {
 	}
 
 	public void tabSelected() {
-		bansRecycler.smoothScrollToPosition(0);
+		warningsRecycler.smoothScrollToPosition(0);
 	}
 
-	public void processBanData(String data) {
+	public void processWarningData(String data) {
 		try {
 			JSONArray json = new JSONArray(data);
-			banList.clear();
+			warningList.clear();
 
 			SimpleDateFormat formatIn = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 			SimpleDateFormat formatOut = new SimpleDateFormat("MM/dd/yy hh:mma", Locale.US);
 			formatIn.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 			for (int i = 0; i < json.length(); i++) {
-				JSONObject banData = json.getJSONObject(i);
-				String made = banData.getString("made"), expires = banData.getString("expires");
+				JSONObject warningData = json.getJSONObject(i);
+				String made = warningData.getString("made");
 				try {
 					made = formatOut.format(formatIn.parse(made));
 					made = made.substring(0, made.length() - 2)
 							+ made.substring(made.length() - 2, made.length() - 1)
 							      .toLowerCase();
-					if (!expires.equals("9999-12-31 23:59:59")) {
-						expires = formatOut.format(formatIn.parse(expires));
-						expires = expires.substring(0, expires.length() - 2)
-								+ expires.substring(expires.length() - 2, expires.length() - 1)
-								         .toLowerCase();
-					} else {
-						expires = "Permanent";
-					}
 				} catch (ParseException e) {
-					Log.e("ProcessBanData", "Unable to parse date");
+					Log.e("ProcessWarningData", "Unable to parse date");
 					e.printStackTrace();
 				}
-				banList.add(new Bans(
-						banData.getString("name"),
+				warningList.add(new Warnings(
+						warningData.getString("name"),
+						warningData.getString("warning"),
 						made,
-						banData.getString("reason"),
-						banData.getString("banner"),
-						expires
+						warningData.getString("warner")
 				));
 			}
-			BansAdapter adapter = new BansAdapter(banList);
-			bansRecycler.setAdapter(adapter);
+			WarningsAdapter adapter = new WarningsAdapter(warningList);
+			warningsRecycler.setAdapter(adapter);
 
 		} catch (JSONException e) {
-			Log.e("Bans_Tabs", "JSON Exception: " + e.toString());
+			Log.e("Warnings_Tabs", "JSON Exception: " + e.toString());
 			e.printStackTrace();
 		}
 	}
@@ -151,7 +142,7 @@ public class BansFragment_Tabs_Cards extends Fragment {
 					response += s;
 
 			} catch (Exception e) {
-				Log.e("DownloadJSON_Bans", "Error encountered while downloading JSON");
+				Log.e("DownloadJSON_Warnings", "Error encountered while downloading JSON");
 				e.printStackTrace();
 			}
 			return response;
@@ -165,58 +156,56 @@ public class BansFragment_Tabs_Cards extends Fragment {
 
 			// Check result
 			if (result != null)
-				processBanData(result);
+				processWarningData(result);
 		}
 	}
 
-	class BansAdapter extends RecyclerView.Adapter<BansAdapter.BanViewHolder> {
+	class WarningsAdapter extends RecyclerView.Adapter<WarningsAdapter.WarningViewHolder> {
 
-		private ArrayList<Bans> bans;
+		private ArrayList<Warnings> warnings;
 
-		class BanViewHolder extends RecyclerView.ViewHolder {
+		class WarningViewHolder extends RecyclerView.ViewHolder {
 			CardView cardView;
-			TextView bannedPlayer, banCreated, banReason, banner, banExpires;
+			TextView warnedPlayer, warning, warningCreated, warner;
 
-			public BanViewHolder(View view) {
+			public WarningViewHolder(View view) {
 				super(view);
-				cardView = (CardView) view.findViewById(R.id.card_view_ban);
-				bannedPlayer = (TextView) view.findViewById(R.id.bannedPlayer);
-				banCreated = (TextView) view.findViewById(R.id.banCreated);
-				banReason = (TextView) view.findViewById(R.id.banReason);
-				banner = (TextView) view.findViewById(R.id.banner);
-				banExpires = (TextView) view.findViewById(R.id.banExpires);
+				cardView = (CardView) view.findViewById(R.id.card_view_warning);
+				warnedPlayer = (TextView) view.findViewById(R.id.warnedPlayer);
+				warningCreated = (TextView) view.findViewById(R.id.warningCreated);
+				warning = (TextView) view.findViewById(R.id.warning);
+				warner = (TextView) view.findViewById(R.id.warner);
 			}
 		}
 
-		public BansAdapter(ArrayList<Bans> bans) {
-			this.bans = bans;
+		public WarningsAdapter(ArrayList<Warnings> warnings) {
+			this.warnings = warnings;
 		}
 
 		@Override
 		public int getItemCount() {
-			return bans.size();
+			return warnings.size();
 		}
 
 		@Override
-		public BanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bandetail_cards, parent, false);
-			return new BanViewHolder(view);
+		public WarningViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+			View view = LayoutInflater.from(parent.getContext())
+									  .inflate(R.layout.warningdetail_cards, parent, false);
+			return new WarningViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(BanViewHolder holder, int position) {
-			holder.bannedPlayer.setText(bans.get(position).getPlayer());
-			RC.color(holder.bannedPlayer);
+		public void onBindViewHolder(WarningViewHolder holder, int position) {
+			holder.warnedPlayer.setText(warnings.get(position).getName());
+			RC.color(holder.warnedPlayer);
 
-			holder.banCreated.setText(bans.get(position).getCreated());
+			holder.warningCreated.setText(warnings.get(position).getCreated());
 
-			holder.banReason.setText(bans.get(position).getReason());
-			RC.color(holder.banReason);
+			holder.warning.setText(warnings.get(position).getWarning());
+			RC.color(holder.warning);
 
-			holder.banner.setText(bans.get(position).getBanner());
-			RC.color(holder.banner);
-
-			holder.banExpires.setText(bans.get(position).getExpires());
+			holder.warner.setText(warnings.get(position).getWarner());
+			RC.color(holder.warner);
 		}
 
 		@Override

@@ -1,7 +1,6 @@
 package com.renegade.rc;
 
 import android.support.v4.app.Fragment;
-//import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,16 +17,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MapCycleFragment_Tabs extends Fragment {
@@ -95,19 +94,30 @@ public class MapCycleFragment_Tabs extends Fragment {
     private class DownloadJSONTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            String response = "";
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(urls[0]);
+            String s = "", response = "";
             try {
-                HttpResponse execute = client.execute(httpGet);
-                InputStream content = execute.getEntity().getContent();
+                // Create connection
+                HttpURLConnection conn = (HttpURLConnection) new URL(urls[0]).openConnection();
+                conn.setRequestMethod("GET");
 
-                BufferedReader buffer = new BufferedReader( new InputStreamReader(content) );
-                String s;
-                while ( (s = buffer.readLine()) != null )
+                // Check response code
+                if(conn.getResponseCode() != 200) {
+                    throw new Exception(
+                            String.format(
+                                "Could not get data from remote source. HTTP response: %s (%d)",
+                                conn.getResponseMessage(), conn.getResponseCode()
+                            )
+                    );
+                }
+
+                // Save response to a string
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
+                while ((s = buffer.readLine()) != null)
                     response += s;
 
             } catch (Exception e) {
+                Log.e("DownloadJSON_Maps", "Error encountered while downloading JSON");
                 e.printStackTrace();
             }
             return response;
@@ -143,9 +153,9 @@ public class MapCycleFragment_Tabs extends Fragment {
             LayoutInflater inflater =
                     (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(resourceID, parent, false);
-            TextView mapName = (TextView) rowView.findViewById(R.id.mapName);
-            TextView mapDesc = (TextView) rowView.findViewById(R.id.mapDesc);
-            ImageView mapImage = (ImageView) rowView.findViewById(R.id.mapImage);
+            TextView mapName = (TextView) rowView.findViewById(R.id.mapName1);
+            TextView mapDesc = (TextView) rowView.findViewById(R.id.mapDesc1);
+            ImageView mapImage = (ImageView) rowView.findViewById(R.id.mapImage1);
             try {
                 JSONObject json = map_details.get(position);
                 // Name
@@ -163,18 +173,18 @@ public class MapCycleFragment_Tabs extends Fragment {
                     mapDesc.setText(json.getString("mapDesc"));
                     RC.color(mapDesc);
                 } else {
-                    rowView.findViewById(R.id.lblDesc).setVisibility(View.GONE);
+                    rowView.findViewById(R.id.lblDesc1).setVisibility(View.GONE);
                     mapDesc.setVisibility(View.GONE);
-                    rowView.findViewById(R.id.spacer).setVisibility(View.GONE);
+                    rowView.findViewById(R.id.spacer1).setVisibility(View.GONE);
                 }
 
                 // Time limit
                 if (json.has("length") && Integer.parseInt(json.getString("length")) > 0) {
-                    ((TextView) rowView.findViewById(R.id.mapTimelimit))
+                    ((TextView) rowView.findViewById(R.id.mapTimelimit1))
                             .setText(String.format("%s minutes", json.getString("length")));
                 } else {
-                    rowView.findViewById(R.id.lblTimelimit).setVisibility(View.GONE);
-                    rowView.findViewById(R.id.mapTimelimit).setVisibility(View.GONE);
+                    rowView.findViewById(R.id.lblTimelimit1).setVisibility(View.GONE);
+                    rowView.findViewById(R.id.mapTimelimit1).setVisibility(View.GONE);
                 }
 
             } catch (JSONException e) {

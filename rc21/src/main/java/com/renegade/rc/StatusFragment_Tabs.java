@@ -25,18 +25,18 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -567,20 +567,30 @@ public class StatusFragment_Tabs extends Fragment {
 
         @Override
         protected String doInBackground(String... urls) {
-            String response = "";
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(urls[0]);
+            String s = "", response = "";
             try {
-                HttpResponse execute = client.execute(httpGet);
-                InputStream content = execute.getEntity().getContent();
+                // Create connection
+                HttpURLConnection conn = (HttpURLConnection) new URL(urls[0]).openConnection();
+                conn.setRequestMethod("GET");
 
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                String s;
-                while ((s = buffer.readLine()) != null) {
-                    response += s;
+                // Check response code
+                if(conn.getResponseCode() != 200) {
+                    throw new Exception(
+                            String.format(
+                                    "Could not get data from remote source. HTTP response: %s (%d)",
+                                    conn.getResponseMessage(), conn.getResponseCode()
+                            )
+                    );
                 }
+
+                // Save response to a string
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
+                while ((s = buffer.readLine()) != null)
+                    response += s;
+
             } catch (Exception e) {
-                Log.e("Status_Download_JSON", "doInBackground(): Exception - " + e.toString());
+                Log.e("DownloadJSON_Status", "Error encountered while downloading JSON");
                 e.printStackTrace();
             }
             return response;

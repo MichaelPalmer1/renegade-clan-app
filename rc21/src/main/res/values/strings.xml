@@ -9,9 +9,13 @@
 
     <string name="app_name">Renegade Clan</string>
     <string name="action_refresh">Refresh</string>
+
     <string name="title_section1">Status</string>
     <string name="title_section2">TeamSpeak</string>
     <string name="title_section3">Cycle</string>
+    <string name="title_section4">Bans</string>
+    <string name="title_section5">Warnings</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="mapImageDescription">Map Image</string>
@@ -29,8 +33,18 @@
     <string name="headerXP">XP</string>
     <string name="headerPing">Ping</string>
     <string name="serverEmpty">Server is empty</string>
+    <string name="serverName">Server Name</string>
+    <string name="sampleText">Lorem ipsum</string>
+    <string name="sampleDate">01/01/15 12:30p</string>
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <!-- Bans -->
+    <string name="bans_banner">Banner:</string>
+    <string name="bans_expires">Expires:</string>
+
+    <!-- Warnings -->
+    <string name="warnings_warner">Warner:</string>
 
 </resources>

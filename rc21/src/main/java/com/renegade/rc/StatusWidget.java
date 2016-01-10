@@ -1,8 +1,10 @@
 package com.renegade.rc;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -33,8 +35,10 @@ public class StatusWidget extends AppWidgetProvider {
         long startTime = System.currentTimeMillis();
         while(infoTask.getStatus() == ServerInfoTask.Status.RUNNING) {
             // break if stuck for 3 seconds
-            if( System.currentTimeMillis() - startTime > 3000)
-                break;
+            if( System.currentTimeMillis() - startTime > 3000) {
+				Log.e("StatusWidget", "Task stuck for 3+ seconds");
+				break;
+			}
         }
 
         // There may be multiple widgets active, so update all of them
@@ -43,10 +47,10 @@ public class StatusWidget extends AppWidgetProvider {
 
     }
 
-
-    @Override
+	@Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+		super.onEnabled(context);
     }
 
     @Override
@@ -66,13 +70,18 @@ public class StatusWidget extends AppWidgetProvider {
 
         String mapText = Info.get("mapname") != null ? "Map: " + Info.get("mapname") : "Map: ---";
         String playerText = Info.get("clients") != null ?
-                "Players: " + Info.get("clients") + " / " + Info.get("sv_maxclients") + " (" + System.currentTimeMillis() + ")"
+                "Players: " + Info.get("clients") + " / " + Info.get("sv_maxclients")
+						+ " (" + System.currentTimeMillis() + ")"
                 : "Players: ---";
+
+		Intent intent = new Intent(context, StatusFragment_Tabs_Cards.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         views.setTextViewText(R.id.widgetMap, mapText);
         views.setTextViewText(R.id.widgetPlayers, playerText);
+		views.setOnClickPendingIntent(R.id.button, pendingIntent);
 
-        // Instruct the widget manager to update the widget
+		// Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -90,7 +99,8 @@ public class StatusWidget extends AppWidgetProvider {
                 DatagramSocket socket = new DatagramSocket();
 
                 // Send outbound packet
-                DatagramPacket packetOut = new DatagramPacket(bufferOut, bufferOut.length, serverAddress, RC.SERVER_PORT);
+                DatagramPacket packetOut = new DatagramPacket(bufferOut, bufferOut.length,
+						serverAddress, RC.SERVER_PORT);
                 socket.send(packetOut);
 
                 // Receive inbound packet
@@ -102,10 +112,10 @@ public class StatusWidget extends AppWidgetProvider {
                 return new String(packetIn.getData());
 
             } catch (UnknownHostException e) {
-                Log.w("ServerInfoTask", "doInBackground(): UnknownHostException - " + e.toString());
+                Log.e("StatusWidget", "doInBackground(): UnknownHostException - " + e.toString());
 
             } catch (IOException e) {
-                Log.w("ServerInfoTask", "doInBackground(): IOException - " + e.toString());
+                Log.e("StatusWidget", "doInBackground(): IOException - " + e.toString());
             }
 
             return null;
@@ -128,7 +138,7 @@ public class StatusWidget extends AppWidgetProvider {
                     Info.set(matchInfo.group(1), matchInfo.group(2));
 
             } else {
-                Log.w("ServerInfoTask", "onPostExecute(): Error querying server - result == null");
+                Log.e("StatusWidget", "onPostExecute(): Error querying server - result == null");
             }
         }
     }
