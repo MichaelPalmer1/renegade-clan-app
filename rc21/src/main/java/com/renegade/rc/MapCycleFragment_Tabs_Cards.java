@@ -53,8 +53,7 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
         if (dlTask != null && dlTask.getStatus() != DownloadJSONTask.Status.FINISHED)
             dlTask.cancel(true);
 
-        dlTask = (DownloadJSONTask) new DownloadJSONTask()
-                .execute("http://www.therenegadeclan.org/getMapCycle.php");
+        dlTask = (DownloadJSONTask) new DownloadJSONTask().execute("Map/Cycle");
 
         return rootView;
     }
@@ -111,7 +110,8 @@ public class MapCycleFragment_Tabs_Cards extends Fragment {
             String s, response = "";
             try {
                 // Create connection
-                HttpURLConnection conn = (HttpURLConnection) new URL(urls[0]).openConnection();
+                HttpURLConnection conn = (HttpURLConnection) new URL( RC.generateAPI(urls[0]) )
+                        .openConnection();
                 conn.setRequestMethod("GET");
 
                 // Check response code
