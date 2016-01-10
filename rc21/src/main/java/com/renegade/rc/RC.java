@@ -17,6 +17,13 @@ import java.util.HashMap;
 public class RC {
     protected static final String SERVER_IP = "et.therenegadeclan.org";
     protected static final int SERVER_PORT = 27960;
+	protected static final String API_URL = "http://www.therenegadeclan.org/api/";
+	protected static final String API_KEY = "0d267a49448f1a907aa90da78b008fa5";
+	protected static final String API_SECRET = "56b05115c416bdd410acfa7deb3965d967c2d127";
+
+	public static String generateAPI(String api) {
+		return API_URL + api + "?key=" + API_KEY + "&secret=" + API_SECRET;
+	}
 
     /*
     static class JSONFunctions {
