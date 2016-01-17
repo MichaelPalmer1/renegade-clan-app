@@ -5,10 +5,9 @@
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/listMapCycle"
+        android:id="@+id/listBans"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:footerDividersEnabled="false">
+        android:layout_height="wrap_content">
     </ListView>
 
 </LinearLayout>

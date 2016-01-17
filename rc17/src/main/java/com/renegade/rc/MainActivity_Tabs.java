@@ -4,8 +4,8 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -13,12 +13,15 @@ import android.view.MenuInflater;
 
 public class MainActivity_Tabs extends FragmentActivity implements ActionBar.TabListener {
 
-    public static final int STATUS = 0, TEAMSPEAK = 1, CYCLE = 2;
+    public static final int STATUS = 0, TS = 1, CYCLE = 2, BANS = 3, WARNINGS = 4;
 
-    private static StatusFragment_Tabs status = null;
+    private static StatusFragment_Tabs_Cards status = null;
     private static TSFragment_Tabs ts = null;
-    private static MapCycleFragment_Tabs cycle = null;
+    private static MapCycleFragment_Tabs_Cards cycle = null;
+    private static BansFragment_Tabs_Cards bans = null;
+    private static WarningsFragment_Tabs_Cards warnings = null;
     private ViewPager viewPager = null;
+    private int lastTab = STATUS;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,56 +66,70 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//        switch (tab.getPosition()) {
-//            case STATUS:
-//                fragmentTransaction.hide(status);
-//                break;
-//
-//            case TEAMSPEAK:
-//                fragmentTransaction.hide(ts);
-//                break;
-//
-//            case CYCLE:
-//                fragmentTransaction.hide(cycle);
-//                break;
-//        }
+        lastTab = tab.getPosition();
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         viewPager.setCurrentItem(tab.getPosition());
-//        switch (tab.getPosition()) {
-//            case STATUS:
+        lastTab = tab.getPosition();
+        /*
+        switch (tab.getPosition()) {
+            case STATUS:
 //                if (status == null) {
 //                    status = new StatusFragment_Tabs();
 //                    fragmentTransaction.add(R.id.pager, status);
 //                } else {
 //                    fragmentTransaction.show(status);
 //                }
-//                break;
-//
-//            case TEAMSPEAK:
+                break;
+
+            case TS:
 //                if (ts == null) {
 //                    ts = new TSFragment_Tabs();
 //                    fragmentTransaction.add(R.id.pager, ts);
 //                } else {
 //                    fragmentTransaction.show(ts);
 //                }
-//                break;
-//
-//            case CYCLE:
+                break;
+
+            case CYCLE:
 //                if (cycle == null) {
 //                    cycle = new MapCycleFragment_Tabs();
 //                    fragmentTransaction.add(R.id.pager, cycle);
 //                } else {
 //                    fragmentTransaction.show(cycle);
 //                }
-//                break;
-//        }
+                break;
+        }
+        */
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        if(tab.getPosition() == lastTab) {
+            switch (tab.getPosition()) {
+                case STATUS:
+                    status.tabSelected();
+                    break;
+
+                case TS:
+                    ts.tabSelected();
+                    break;
+
+                case CYCLE:
+                    cycle.tabSelected();
+                    break;
+
+                case BANS:
+                    bans.tabSelected();
+                    break;
+
+                case WARNINGS:
+                    warnings.tabSelected();
+                    break;
+            }
+        }
     }
 
     class PageAdapter extends FragmentStatePagerAdapter {
@@ -126,32 +143,45 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
             switch (position) {
                 case STATUS:
                     if (status == null)
-                        status = new StatusFragment_Tabs();
+                        status = new StatusFragment_Tabs_Cards();
                     return status;
 
-                case TEAMSPEAK:
+                case TS:
                     if (ts == null)
                         ts = new TSFragment_Tabs();
                     return ts;
+
                 case CYCLE:
                     if (cycle == null)
-                        cycle = new MapCycleFragment_Tabs();
+                        cycle = new MapCycleFragment_Tabs_Cards();
                     return cycle;
+
+                case BANS:
+                    if (bans == null)
+                        bans = new BansFragment_Tabs_Cards();
+                    return bans;
+
+                case WARNINGS:
+                    if (warnings == null)
+                        warnings = new WarningsFragment_Tabs_Cards();
+                    return warnings;
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 5;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case STATUS:    return getString(R.string.title_section1);
-                case TEAMSPEAK: return getString(R.string.title_section2);
+                case TS:        return getString(R.string.title_section2);
                 case CYCLE:     return getString(R.string.title_section3);
+                case BANS:      return getString(R.string.title_section4);
+                case WARNINGS:  return getString(R.string.title_section5);
             }
             return null;
         }

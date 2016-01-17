@@ -1,10 +1,10 @@
 package com.renegade.rc;
 
 import android.annotation.SuppressLint;
-import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ScrollView;
 
 public class TSFragment_Tabs extends Fragment {
 	private WebView tsViewer;
     private MenuItem btn_refresh;
 	private SwipeRefreshLayout refreshTS;
+	private ScrollView scrollTS;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,10 @@ public class TSFragment_Tabs extends Fragment {
 			}
 		});
 		refreshTS.setColorSchemeColors(Color.BLUE, Color.GREEN);
+
+		// Scroll view
+		scrollTS = (ScrollView) rootView.findViewById(R.id.scrollTsViewer);
+
 		return rootView;
 	}
 
@@ -68,10 +74,14 @@ public class TSFragment_Tabs extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void tabSelected() {
+		scrollTS.fullScroll(View.FOCUS_UP);
+		doRefresh();
+	}
+
 	private void doRefresh() {
 		btn_refresh.setEnabled(false);
 		refreshTS.setRefreshing(true);
-//		tsViewer.reload();
 		tsViewer.loadUrl("file:///android_asset/ts.html");
 		new Handler().postDelayed(new Runnable() {
 			public void run() {

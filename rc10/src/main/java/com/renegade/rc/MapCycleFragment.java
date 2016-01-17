@@ -19,16 +19,21 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+/*
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+*/
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -53,8 +58,11 @@ public class MapCycleFragment extends Fragment {
         if (dlTask != null && dlTask.getStatus() != DownloadJSONTask.Status.FINISHED) {
             dlTask.cancel(true);
         }
+		/*
         dlTask = (DownloadJSONTask) new DownloadJSONTask()
-                .execute("http://www.therenegadeclan.org/getMapCycle.php");
+                .execute("http://www.therenegadeclan.org/getMapCycle.php"); */
+
+		dlTask = (DownloadJSONTask) new DownloadJSONTask().execute("Map/Cycle");
 
         return rootView;
     }
@@ -111,6 +119,7 @@ public class MapCycleFragment extends Fragment {
             super.onPreExecute();
         }
 
+		/*
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -126,6 +135,38 @@ public class MapCycleFragment extends Fragment {
                     response += s;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+		*/
+
+        protected String doInBackground(String... urls) {
+            String s, response = "";
+            try {
+                // Create connection
+                HttpURLConnection conn = (HttpURLConnection) new URL( RC.generateAPI(urls[0]) )
+                        .openConnection();
+                conn.setRequestMethod("GET");
+
+                // Check response code
+                if(conn.getResponseCode() != 200) {
+                    throw new Exception(
+                            String.format(
+                                    "Could not get data from remote source. HTTP response: %s (%d)",
+                                    conn.getResponseMessage(), conn.getResponseCode()
+                            )
+                    );
+                }
+
+                // Save response to a string
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
+                while ((s = buffer.readLine()) != null)
+                    response += s;
+
+            } catch (Exception e) {
+                Log.e("DownloadJSON_Maps", "Error encountered while downloading JSON");
                 e.printStackTrace();
             }
             return response;

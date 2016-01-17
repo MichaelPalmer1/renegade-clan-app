@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/bannedPlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:hint="@string/sampleText"
+            android:layout_weight="0.65"
+            style="@style/AppTheme.TextAppearance.Medium"
+            android:gravity="left" />
+
+        <TextView
+            android:id="@+id/banCreated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/sampleDate"
+            android:layout_weight="0.35"
+            style="@style/AppTheme.TextAppearance.Small"
+            android:gravity="right" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp">
+
+        <TextView
+            android:id="@+id/banReason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/sampleText"
+            android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bans_banner"
+            android:textAppearance="@style/AppTheme.TextAppearance.Small"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/sampleText"
+            android:layout_marginLeft="5dp"
+            android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/bans_expires"
+            android:textAppearance="@style/AppTheme.TextAppearance.Small"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/banExpires"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/sampleDate"
+            android:layout_marginLeft="5dp"
+            android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+    </TableRow>
+
+</TableLayout>

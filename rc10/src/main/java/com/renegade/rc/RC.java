@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RC {
-    protected static final String SERVER_IP = "et.therenegadeclan.org";
-    protected static final int SERVER_PORT = 27960;
+	protected static final String SERVER_IP = "et.therenegadeclan.org";
+	protected static final int SERVER_PORT = 27960;
+	protected static final String API_URL = "http://www.therenegadeclan.org/api/";
+	protected static final String API_KEY = "0d267a49448f1a907aa90da78b008fa5";
+	protected static final String API_SECRET = "56b05115c416bdd410acfa7deb3965d967c2d127";
+
+	public static String generateAPI(String api) {
+		return API_URL + api + "?key=" + API_KEY + "&secret=" + API_SECRET;
+	}
 
     /*
     static class JSONFunctions {
@@ -248,6 +255,99 @@ class Teams {
         }
     }
 
+}
+
+class Maps {
+
+    private String bsp;
+    private String map;
+    private int length;
+    private String mapDesc;
+
+    public Maps(String bsp, String map, int length, String mapDesc) {
+        this.bsp = bsp;
+        this.map = map;
+        this.length = length;
+        this.mapDesc = mapDesc;
+    }
+
+    public String getBsp() {
+        return bsp;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getMapDesc() {
+        return mapDesc;
+    }
+}
+
+class Bans {
+
+    private String player, reason, banner;
+    private String created, expires;
+
+    public Bans(String player, String created, String reason, String banner, String expires) {
+        this.player = player;
+        this.created = created;
+        this.reason = reason;
+        this.banner = banner;
+        this.expires = expires;
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public String getExpires() {
+        return expires;
+    }
+}
+
+class Warnings {
+
+    private String name, warning, created, warner;
+
+    public Warnings(String name, String warning, String created, String warner) {
+        this.name = name;
+        this.warning = warning;
+        this.created = created;
+        this.warner = warner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getWarning() {
+        return warning;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public String getWarner() {
+        return warner;
+    }
 }
 
 class Player {

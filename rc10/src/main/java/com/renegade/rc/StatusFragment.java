@@ -19,18 +19,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+/*
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+*/
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -208,8 +213,11 @@ public class StatusFragment extends Fragment {
         if (jsonTask != null && jsonTask.getStatus() != DownloadJSONTask.Status.FINISHED) {
             jsonTask.cancel(true);
         }
+		/*
         jsonTask = (DownloadJSONTask) new DownloadJSONTask().execute
-                ("http://www.therenegadeclan.org/getMapInfo.php?map=" + Settings.get("mapname"));
+                ("http://www.therenegadeclan.org/getMapInfo.php?map=" + Settings.get("mapname"));*/
+		jsonTask = (DownloadJSONTask) new DownloadJSONTask()
+				.execute("Map/Info[" + Settings.get("mapname") + "]");
 
         // Map image
         Picasso.with(getActivity())
@@ -494,6 +502,7 @@ public class StatusFragment extends Fragment {
         }
 
         @Override
+        /*
         protected String doInBackground(String... urls) {
             String response = "";
             DefaultHttpClient client = new DefaultHttpClient();
@@ -509,6 +518,37 @@ public class StatusFragment extends Fragment {
                 }
             } catch (Exception e) {
                 Log.e("Status_DownloadJSONTask", "doInBackground(): Exception - " + e.toString());
+                e.printStackTrace();
+            }
+            return response;
+        }
+        */
+        protected String doInBackground(String... urls) {
+            String s, response = "";
+            try {
+                // Create connection
+                HttpURLConnection conn = (HttpURLConnection) new URL( RC.generateAPI(urls[0]) )
+                        .openConnection();
+                conn.setRequestMethod("GET");
+
+                // Check response code
+                if(conn.getResponseCode() != 200) {
+                    throw new Exception(
+                            String.format(
+                                    "Could not get data from remote source. HTTP response: %s (%d)",
+                                    conn.getResponseMessage(), conn.getResponseCode()
+                            )
+                    );
+                }
+
+                // Save response to a string
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
+                while ((s = buffer.readLine()) != null)
+                    response += s;
+
+            } catch (Exception e) {
+                Log.e("DownloadJSON_Status", "Error encountered while downloading JSON");
                 e.printStackTrace();
             }
             return response;

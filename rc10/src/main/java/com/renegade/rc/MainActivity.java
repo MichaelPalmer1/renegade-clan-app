@@ -14,7 +14,7 @@ public class MainActivity extends ActionBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
-    public static final int STATUS = 0, TEAMSPEAK = 1, CYCLE = 2;
+    public static final int STATUS = 0, TEAMSPEAK = 1, CYCLE = 2, BANS = 3, WARNINGS = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +23,12 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_api_10);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer_api_10,
+                R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
     }
@@ -53,6 +53,16 @@ public class MainActivity extends ActionBarActivity
                 	.replace(R.id.container, new MapCycleFragment())
                 	.commit();
         		break;
+            case BANS: // Bans
+                fragmentManager.beginTransaction()
+							   .replace(R.id.container, new BansFragment())
+                               .commit();
+                break;
+			case WARNINGS: // Warnings
+				fragmentManager.beginTransaction()
+							   .replace(R.id.container, new WarningsFragment())
+							   .commit();
+				break;
         	default: // Server Status
         		fragmentManager.beginTransaction()
                 	.replace(R.id.container, new StatusFragment())
@@ -65,6 +75,8 @@ public class MainActivity extends ActionBarActivity
             case STATUS:    mTitle = getString(R.string.title_section1); break;
             case TEAMSPEAK: mTitle = getString(R.string.title_section2); break;
             case CYCLE:     mTitle = getString(R.string.title_section3); break;
+			case BANS:      mTitle = getString(R.string.title_section4); break;
+			case WARNINGS:  mTitle = getString(R.string.title_section5); break;
         }
     }
 
