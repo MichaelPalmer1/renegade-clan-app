@@ -4,6 +4,7 @@ import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -150,27 +151,38 @@ public class RC {
         if(etColors.size() == 0)
             initColors();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
-            for (int i = 0; i < text.length(); i++) {
-                if (text.substring(i, i + 1).equals("^")) {
-                    String code = text.substring(i + 1, i + 2).toLowerCase();
-                    if (etColors.containsKey(code)) {
-                        String output = "";
-                        for (int j = i + 2; j < text.length(); j++) {
-                            if (text.substring(j, j + 1).equals("^")) {
-                                i = j - 1;
-                                break;
+        try {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                SpannableStringBuilder ssb = new SpannableStringBuilder();
+                for (int i = 0; i < text.length(); i++) {
+                    if (text.substring(i, i + 1).equals("^") && (i+2) < text.length()) {
+                        String code = text.substring(i + 1, i + 2).toLowerCase();
+                        if (etColors.containsKey(code)) {
+                            String output = "";
+                            for (int j = i + 2; j < text.length(); j++) {
+                                if (text.substring(j, j + 1).equals("^")) {
+                                    i = j - 1;
+                                    break;
+                                }
+                                output += text.substring(j, j + 1);
                             }
-                            output += text.substring(j, j + 1);
+                            ssb.append(output, new ForegroundColorSpan(etColors.get(code)), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                         }
-                        ssb.append(output, new ForegroundColorSpan(etColors.get(code)), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                     }
                 }
+                tv.setText(ssb);
+            } else {
+                colorKitKat(tv);
             }
-            tv.setText(ssb);
-        } else {
-            colorKitKat(tv);
+        } catch (Exception e) {
+			Log.e("Renegade_Clan", "Encountered error while coloring text");
+			Log.e("Renegade_Clan", "Text: " + text);
+			e.printStackTrace();
+			for (String key : etColors.keySet()) {
+				text = text.replace("^" + key, "");
+			}
+			tv.setText(text);
         }
     }
 

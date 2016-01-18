@@ -26,8 +26,8 @@ android {
         applicationId "com.renegade.rc"
         minSdkVersion 10
         targetSdkVersion 10
-        versionCode 1012107
-        versionName '1.0.7'
+        versionCode 1012108
+        versionName '1.0.8'
         signingConfig signingConfigs.config
     }
     buildTypes {

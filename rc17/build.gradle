@@ -7,7 +7,6 @@ android {
             keyAlias 'rc_app'
             storePassword '******'
             keyPassword '******'
-
             File propsFile = file('../secure.properties');
             if (propsFile.exists()) {
                 Properties props = new Properties();
@@ -26,8 +25,8 @@ android {
         applicationId "com.renegade.rc"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1712107
-        versionName '1.0.7'
+        versionCode 1712109
+        versionName '1.0.9'
         signingConfig signingConfigs.config
     }
     buildTypes {
