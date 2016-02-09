@@ -1,17 +1,22 @@
 package com.renegade.rc;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
+//import android.app.ActionBar;
+//import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class MainActivity_Tabs extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity_Tabs extends AppCompatActivity {
 
     public static final int STATUS = 0, TS = 1, CYCLE = 2, BANS = 3, WARNINGS = 4;
 
@@ -20,21 +25,73 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
     private static MapCycleFragment_Tabs_Cards cycle = null;
     private static BansFragment_Tabs_Cards bans = null;
     private static WarningsFragment_Tabs_Cards warnings = null;
-    private ViewPager viewPager = null;
-    private int lastTab = STATUS;
+//    private ViewPager viewPager = null;
+//    private int lastTab = STATUS;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main_tabs);
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//		toolbar.setTitle( getString(R.string.app_name) );
+		setSupportActionBar(toolbar);
+
+//        CollapsingToolbarLayout collapsingToolbarLayout =
+//                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+//		collapsingToolbarLayout.setTitleEnabled(false);
+
+		final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+		tabLayout.addTab(tabLayout.newTab().setText("Status"));
+		tabLayout.addTab(tabLayout.newTab().setText("Teamspeak"));
+		tabLayout.addTab(tabLayout.newTab().setText("Cycle"));
+		tabLayout.addTab(tabLayout.newTab().setText("Bans"));
+		tabLayout.addTab(tabLayout.newTab().setText("Warnings"));
+		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+		final PageAdapter adapter = new PageAdapter
+				(getSupportFragmentManager(), tabLayout.getTabCount());
+		viewPager.setAdapter(adapter);
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
+				toolbar.setSubtitle( getSubtitle( tab.getPosition() ) );
+			}
+
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
+
+			}
+
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
+
+			}
+		});
+
+		tabLayout.setupWithViewPager(viewPager);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		return id == R.id.action_refresh || super.onOptionsItemSelected(item);
+
+	}
+
+	/**
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_tabs);
-
-        // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
-
-        if (actionBar == null)
-            return;
-
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         PageAdapter pagerAdapter = new PageAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -73,7 +130,7 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         viewPager.setCurrentItem(tab.getPosition());
         lastTab = tab.getPosition();
-        /*
+
         switch (tab.getPosition()) {
             case STATUS:
 //                if (status == null) {
@@ -102,7 +159,7 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
 //                }
                 break;
         }
-        */
+
     }
 
     @Override
@@ -131,11 +188,15 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
             }
         }
     }
+	*/
 
     class PageAdapter extends FragmentStatePagerAdapter {
 
-        public PageAdapter(FragmentManager fragmentManager) {
+		protected int mNumOfTabs;
+
+        public PageAdapter(FragmentManager fragmentManager, int numTabs) {
             super(fragmentManager);
+			this.mNumOfTabs = numTabs;
         }
 
         @Override
@@ -171,7 +232,7 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
 
         @Override
         public int getCount() {
-            return 5;
+            return mNumOfTabs;
         }
 
         @Override
@@ -186,4 +247,15 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
             return null;
         }
     }
+
+	public CharSequence getSubtitle(int position) {
+		switch (position) {
+			case STATUS:    return getString(R.string.title_section1);
+			case TS:        return getString(R.string.title_section2);
+			case CYCLE:     return getString(R.string.title_section3);
+			case BANS:      return getString(R.string.title_section4);
+			case WARNINGS:  return getString(R.string.title_section5);
+		}
+		return null;
+	}
 }

@@ -158,7 +158,7 @@ public class RC {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             for (int i = 0; i < text.length(); i++) {
-                if (text.substring(i, i + 1).equals("^")) {
+                if (text.substring(i, i + 1).equals("^") && (i+2) < text.length()) {
                     String code = text.substring(i + 1, i + 2).toLowerCase();
                     if (etColors.containsKey(code)) {
                         String output = "";

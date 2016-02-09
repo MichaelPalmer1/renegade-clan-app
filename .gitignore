@@ -1,5 +1,5 @@
 ## Android application files
-# *.apk
+*.apk
 *.ap_
 
 ## Generated files
@@ -19,3 +19,6 @@ secure.properties
 ## Android Studio
 *.iml
 .idea/
+
+## Other Files
+screenshots/
