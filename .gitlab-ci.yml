@@ -2,5 +2,6 @@ before_script:
   - export ANDROID_HOME="$ANDROID_HOME_DIR"
 
 build_app:
-  type: build
+  stage: build
+  only: master@android/Renegade-Clan
   script: ./gradlew assembleRelease
