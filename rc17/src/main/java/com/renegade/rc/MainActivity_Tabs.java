@@ -13,11 +13,12 @@ import android.view.MenuInflater;
 
 public class MainActivity_Tabs extends FragmentActivity implements ActionBar.TabListener {
 
-    public static final int STATUS = 0, TS = 1, CYCLE = 2, BANS = 3, WARNINGS = 4;
+    public static final int STATUS = 0, TS = 1, CYCLE = 2, VOTES = 3, BANS = 4, WARNINGS = 5;
 
     private static StatusFragment_Tabs_Cards status = null;
     private static TSFragment_Tabs ts = null;
     private static MapCycleFragment_Tabs_Cards cycle = null;
+    private static MapVoteFragment_Tabs_Cards votes = null;
     private static BansFragment_Tabs_Cards bans = null;
     private static WarningsFragment_Tabs_Cards warnings = null;
     private ViewPager viewPager = null;
@@ -121,6 +122,10 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
                     cycle.tabSelected();
                     break;
 
+                case VOTES:
+                    votes.tabSelected();
+                    break;
+
                 case BANS:
                     bans.tabSelected();
                     break;
@@ -156,6 +161,11 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
                         cycle = new MapCycleFragment_Tabs_Cards();
                     return cycle;
 
+                case VOTES:
+                    if (votes == null)
+                        votes = new MapVoteFragment_Tabs_Cards();
+                    return votes;
+
                 case BANS:
                     if (bans == null)
                         bans = new BansFragment_Tabs_Cards();
@@ -171,7 +181,7 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
 
         @Override
@@ -180,8 +190,9 @@ public class MainActivity_Tabs extends FragmentActivity implements ActionBar.Tab
                 case STATUS:    return getString(R.string.title_section1);
                 case TS:        return getString(R.string.title_section2);
                 case CYCLE:     return getString(R.string.title_section3);
-                case BANS:      return getString(R.string.title_section4);
-                case WARNINGS:  return getString(R.string.title_section5);
+                case VOTES:     return getString(R.string.title_section4);
+                case BANS:      return getString(R.string.title_section5);
+                case WARNINGS:  return getString(R.string.title_section6);
             }
             return null;
         }
