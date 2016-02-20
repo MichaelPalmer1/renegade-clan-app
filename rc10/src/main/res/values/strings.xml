@@ -13,8 +13,9 @@
     <string name="title_section1">Status</string>
     <string name="title_section2">TeamSpeak</string>
     <string name="title_section3">Cycle</string>
-    <string name="title_section4">Bans</string>
-    <string name="title_section5">Warnings</string>
+    <string name="title_section4">Votes</string>
+    <string name="title_section5">Bans</string>
+    <string name="title_section6">Warnings</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -47,5 +48,14 @@
 
     <!-- Warnings -->
     <string name="warnings_warner">Warner:</string>
+
+    <!-- Map Votes -->
+    <string name="lblTimesPlayed">Times Played</string>
+    <string name="lblLastPlayed">Last Played</string>
+    <string name="lblVotes">Votes</string>
+    <string name="lblMapUsage">Map Usage</string>
+    <string name="mapVotes">%1$d / %2$d</string>
+    <string name="lastPlayed">%1$d map%2$s ago</string>
+    <string name="mapUsage">%.2f%%</string>
 
 </resources>

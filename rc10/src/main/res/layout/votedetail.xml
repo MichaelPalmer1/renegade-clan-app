@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/voteDetailTable"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:stretchColumns="1">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mapVoteName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:hint="@string/sampleText"
+            android:layout_span="3"
+            style="@style/AppTheme.TextAppearance.Medium" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/mapVoteImage"
+            android:layout_width="0dp"
+            android:layout_height="96dp"
+            android:layout_weight="0.25"
+            android:contentDescription="@string/mapImageDescription"
+            android:src="@drawable/unknown_map"
+            android:cropToPadding="false"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.375"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lblTimesPlayed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblTimesPlayed"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/timesPlayed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/sampleText"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+            <TextView
+                android:id="@+id/spacer"
+                android:layout_width="10dp"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:id="@+id/lblLastPlayed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblLastPlayed"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lastPlayed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/sampleText"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.375"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lblVotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblVotes"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/votes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/sampleText"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+            <TextView
+                android:id="@+id/spacer2"
+                android:layout_width="10dp"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:id="@+id/lblMapUsage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblMapUsage"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mapUsage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/sampleText"
+                android:textAppearance="@style/AppTheme.TextAppearance.Small" />
+
+        </LinearLayout>
+
+    </TableRow>
+
+</TableLayout>

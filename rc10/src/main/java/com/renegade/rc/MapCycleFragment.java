@@ -220,7 +220,7 @@ public class MapCycleFragment extends Fragment {
                 Picasso.with(getActivity())
                         .load("http://www.therenegadeclan.org/images/maps/"
                                 + json.getString("bsp") + ".png")
-                        .placeholder(R.drawable.unknownmap)
+                        .placeholder(R.drawable.unknown_map)
                         .into(mapImage);
 
                 // Description

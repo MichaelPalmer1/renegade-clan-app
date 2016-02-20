@@ -288,6 +288,52 @@ class Maps {
     }
 }
 
+class Votes {
+
+    private String name, mapName;
+    private int timesPlayed, lastPlayed, totalVotes, voteEligible;
+    private double liking;
+
+    public Votes(String name, String mapName, int timesPlayed, int lastPlayed,
+                 int totalVotes, int voteEligible, double liking) {
+        this.name = name;
+        this.mapName = mapName;
+        this.timesPlayed = timesPlayed;
+        this.lastPlayed = lastPlayed;
+        this.totalVotes = totalVotes;
+        this.voteEligible = voteEligible;
+        this.liking = liking;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public int getTimesPlayed() {
+        return timesPlayed;
+    }
+
+    public int getLastPlayed() {
+        return lastPlayed;
+    }
+
+    public int getTotalVotes() {
+        return totalVotes;
+    }
+
+    public int getVoteEligible() {
+        return voteEligible;
+    }
+
+    public double getLiking() {
+        return liking;
+    }
+}
+
 class Bans {
 
     private String player, reason, banner;

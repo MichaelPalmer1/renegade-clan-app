@@ -14,7 +14,7 @@ public class MainActivity extends ActionBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
-    public static final int STATUS = 0, TEAMSPEAK = 1, CYCLE = 2, BANS = 3, WARNINGS = 4;
+    public static final int STATUS = 0, TEAMSPEAK = 1, CYCLE = 2, VOTES = 3, BANS = 4, WARNINGS = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,11 @@ public class MainActivity extends ActionBarActivity
                 	.replace(R.id.container, new MapCycleFragment())
                 	.commit();
         		break;
+            case VOTES: // Map Votes
+                fragmentManager.beginTransaction()
+                               .replace(R.id.container, new MapVoteFragment())
+                               .commit();
+                break;
             case BANS: // Bans
                 fragmentManager.beginTransaction()
 							   .replace(R.id.container, new BansFragment())
@@ -75,8 +80,9 @@ public class MainActivity extends ActionBarActivity
             case STATUS:    mTitle = getString(R.string.title_section1); break;
             case TEAMSPEAK: mTitle = getString(R.string.title_section2); break;
             case CYCLE:     mTitle = getString(R.string.title_section3); break;
-			case BANS:      mTitle = getString(R.string.title_section4); break;
-			case WARNINGS:  mTitle = getString(R.string.title_section5); break;
+            case VOTES:     mTitle = getString(R.string.title_section4); break;
+			case BANS:      mTitle = getString(R.string.title_section5); break;
+			case WARNINGS:  mTitle = getString(R.string.title_section6); break;
         }
     }
 

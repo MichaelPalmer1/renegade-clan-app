@@ -223,7 +223,7 @@ public class StatusFragment extends Fragment {
         Picasso.with(getActivity())
                 .load("http://www.therenegadeclan.org/images/maps/"
                         + Settings.get("mapname").toLowerCase() + ".png")
-                .placeholder(R.drawable.unknownmap)
+                .placeholder(R.drawable.unknown_map)
                 .into(mapImage);
 
         // Server name
