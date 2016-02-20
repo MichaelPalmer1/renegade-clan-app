@@ -88,12 +88,12 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
                 JSONObject voteData = json.getJSONObject(i);
                 voteList.add( new Votes(
                         voteData.getString("name"),
-						voteData.getString("mapname"),
+                        voteData.getString("mapname"),
                         Integer.parseInt(voteData.getString("times_played")),
-						Integer.parseInt(voteData.getString("last_played")) ,
-						Integer.parseInt(voteData.getString("total_votes")),
-						Integer.parseInt(voteData.getString("vote_eligible")),
-						Double.parseDouble(voteData.getString("liking"))
+                        Integer.parseInt(voteData.getString("last_played")) ,
+                        Integer.parseInt(voteData.getString("total_votes")),
+                        Integer.parseInt(voteData.getString("vote_eligible")),
+                        Double.parseDouble(voteData.getString("liking"))
                 ));
             }
             RVAdapter adapter = new RVAdapter(voteList);
@@ -166,7 +166,7 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
                 cardView = (CardView) view.findViewById(R.id.card_view_map_vote);
                 mapVoteName = (TextView) view.findViewById(R.id.mapVoteName);
                 mapVoteImage = (ImageView) view.findViewById(R.id.mapVoteImage);
-				timesPlayed = (TextView) view.findViewById(R.id.timesPlayed);
+                timesPlayed = (TextView) view.findViewById(R.id.timesPlayed);
                 lastPlayed = (TextView) view.findViewById(R.id.lastPlayed);
                 votes = (TextView) view.findViewById(R.id.votes);
                 mapUsage = (TextView) view.findViewById(R.id.mapUsage);
@@ -187,42 +187,46 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
         @Override
         public VoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-									  .inflate(R.layout.votedetail_cards, parent, false);
+                                      .inflate(R.layout.votedetail_cards, parent, false);
             return new VoteViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(VoteViewHolder holder, int position) {
-			// Map Name
-			holder.mapVoteName.setText(votes.get(position).getMapName());
-			RC.color(holder.mapVoteName);
+            // Map Name
+            holder.mapVoteName.setText(votes.get(position).getMapName());
+            RC.color(holder.mapVoteName);
 
-			// Map Image
+            // Map Image
             Picasso.with(getActivity())
                     .load(String.format("http://www.therenegadeclan.org/images/maps/%s.png",
                             votes.get(position).getName()))
                     .placeholder(R.drawable.unknown_map)
-				   .into(holder.mapVoteImage);
+                   .into(holder.mapVoteImage);
 
-			// Times Played
+            // Times Played
             holder.timesPlayed.setText(String.valueOf(votes.get(position).getTimesPlayed()));
 
-			// Last Played
-			int lastPlayed = votes.get(position).getLastPlayed();
-			holder.lastPlayed.setText(
-					getString(R.string.lastPlayed, lastPlayed, lastPlayed == 1 ? "" : "s")
-			);
+            // Last Played
+            int lastPlayed = votes.get(position).getLastPlayed();
+            if (lastPlayed == -1) {
+                holder.lastPlayed.setText(getString(R.string.never));
+            } else {
+                holder.lastPlayed.setText(
+                        getString(R.string.lastPlayed, lastPlayed, lastPlayed == 1 ? "" : "s")
+                );
+            }
 
-			// Votes
-			holder.votes.setText(
-					getString(R.string.mapVotes, votes.get(position).getTotalVotes(),
-							votes.get(position).getVoteEligible())
-			);
+            // Votes
+            holder.votes.setText(
+                    getString(R.string.mapVotes, votes.get(position).getTotalVotes(),
+                            votes.get(position).getVoteEligible())
+            );
 
-			// Map Usage
-			holder.mapUsage.setText(
-					getString(R.string.mapUsage, votes.get(position).getLiking())
-			);
+            // Map Usage
+            holder.mapUsage.setText(
+                    getString(R.string.mapUsage, votes.get(position).getLiking())
+            );
 
         }
 

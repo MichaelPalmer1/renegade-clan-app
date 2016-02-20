@@ -54,7 +54,7 @@ public class MapVoteFragment extends Fragment {
             dlTask.cancel(true);
         }
 
-		dlTask = (DownloadJSONTask) new DownloadJSONTask().execute("Map/Votes");
+        dlTask = (DownloadJSONTask) new DownloadJSONTask().execute("Map/Votes");
 
         return rootView;
     }
@@ -82,29 +82,29 @@ public class MapVoteFragment extends Fragment {
     }
 
     public void processMapData(String data) {
-		try {
-			JSONArray json = new JSONArray(data);
-			voteList.clear();
+        try {
+            JSONArray json = new JSONArray(data);
+            voteList.clear();
 
-			for(int i = 0; i < json.length(); i++) {
-				JSONObject voteData = json.getJSONObject(i);
-				voteList.add( new Votes(
-						voteData.getString("name"),
-						voteData.getString("mapname"),
-						Integer.parseInt(voteData.getString("times_played")),
-						Integer.parseInt(voteData.getString("last_played")) ,
-						Integer.parseInt(voteData.getString("total_votes")),
-						Integer.parseInt(voteData.getString("vote_eligible")),
-						Double.parseDouble(voteData.getString("liking"))
-				));
-			}
-			CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.votedetail, voteList);
-			listMapVotes.setAdapter(adapter);
+            for(int i = 0; i < json.length(); i++) {
+                JSONObject voteData = json.getJSONObject(i);
+                voteList.add( new Votes(
+                        voteData.getString("name"),
+                        voteData.getString("mapname"),
+                        Integer.parseInt(voteData.getString("times_played")),
+                        Integer.parseInt(voteData.getString("last_played")) ,
+                        Integer.parseInt(voteData.getString("total_votes")),
+                        Integer.parseInt(voteData.getString("vote_eligible")),
+                        Double.parseDouble(voteData.getString("liking"))
+                ));
+            }
+            CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.votedetail, voteList);
+            listMapVotes.setAdapter(adapter);
 
-		} catch (JSONException e) {
-			Log.e("MapVotes", "JSON Exception: " + e.toString());
-			e.printStackTrace();
-		}
+        } catch (JSONException e) {
+            Log.e("MapVotes", "JSON Exception: " + e.toString());
+            e.printStackTrace();
+        }
     }
 
     private class DownloadJSONTask extends AsyncTask<String, Void, String> {
@@ -180,49 +180,49 @@ public class MapVoteFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(resourceID, parent, false);
             TextView mapVoteName = (TextView) rowView.findViewById(R.id.mapVoteName);
             ImageView mapVoteImage = (ImageView) rowView.findViewById(R.id.mapVoteImage);
-			TextView timesPlayed = (TextView) rowView.findViewById(R.id.timesPlayed);
-			TextView lastPlayed = (TextView) rowView.findViewById(R.id.lastPlayed);
-			TextView votes = (TextView) rowView.findViewById(R.id.votes);
-			TextView mapUsage = (TextView) rowView.findViewById(R.id.mapUsage);
+            TextView timesPlayed = (TextView) rowView.findViewById(R.id.timesPlayed);
+            TextView lastPlayed = (TextView) rowView.findViewById(R.id.lastPlayed);
+            TextView votes = (TextView) rowView.findViewById(R.id.votes);
+            TextView mapUsage = (TextView) rowView.findViewById(R.id.mapUsage);
 
-			// Map Name
-			mapVoteName.setText(vote_details.get(position).getMapName());
-			RC.color(mapVoteName);
+            // Map Name
+            mapVoteName.setText(vote_details.get(position).getMapName());
+            RC.color(mapVoteName);
 
-			// Map Image
-			Picasso.with(getActivity())
-				   .load(String.format("http://www.therenegadeclan.org/images/maps/%s.png",
-						   vote_details.get(position).getName()))
-				   .placeholder(R.drawable.unknown_map)
-				   .into(mapVoteImage);
+            // Map Image
+            Picasso.with(getActivity())
+                   .load(String.format("http://www.therenegadeclan.org/images/maps/%s.png",
+                           vote_details.get(position).getName()))
+                   .placeholder(R.drawable.unknown_map)
+                   .into(mapVoteImage);
 
-			// Times Played
-			timesPlayed.setText(String.valueOf(vote_details.get(position).getTimesPlayed()));
+            // Times Played
+            timesPlayed.setText(String.valueOf(vote_details.get(position).getTimesPlayed()));
 
-			// Last Played
-			int last = vote_details.get(position).getLastPlayed();
+            // Last Played
+            int last = vote_details.get(position).getLastPlayed();
             if (last == -1) {
-                lastPlayed.setText("Never");
+                lastPlayed.setText(getString(R.string.never));
             } else {
                 lastPlayed.setText(
                         getString(R.string.lastPlayed, last, last == 1 ? "" : "s")
                 );
             }
 
-			// Votes
-			votes.setText(
-					getString(R.string.mapVotes, vote_details.get(position).getTotalVotes(),
-							vote_details.get(position).getVoteEligible())
-			);
+            // Votes
+            votes.setText(
+                    getString(R.string.mapVotes, vote_details.get(position).getTotalVotes(),
+                            vote_details.get(position).getVoteEligible())
+            );
 
-			// Map Usage
-			mapUsage.setText(
-					getString(R.string.mapUsage, vote_details.get(position).getLiking())
-			);
+            // Map Usage
+            mapUsage.setText(
+                    getString(R.string.mapUsage, vote_details.get(position).getLiking())
+            );
 
             return rowView;
         }
