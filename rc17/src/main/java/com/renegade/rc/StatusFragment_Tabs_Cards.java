@@ -50,7 +50,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.TextView.BufferType.SPANNABLE;
 
-public class StatusFragment_Tabs_Cards extends Fragment {
+public class StatusFragment_Tabs_Cards extends RCFragment {
     private TableRow rowNextMap;
     private TextView serverName, mapName, numPlayers, mod, nextMap;
     private ImageView mapImage;

@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ScrollView;
 
-public class TSFragment_Tabs extends Fragment {
+public class TSFragment_Tabs extends RCFragment {
 	private WebView tsViewer;
     private MenuItem btn_refresh;
 	private SwipeRefreshLayout refreshTS;

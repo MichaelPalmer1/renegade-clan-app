@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class WarningsFragment_Tabs_Cards extends Fragment {
+public class WarningsFragment_Tabs_Cards extends RCFragment {
 	public ArrayList<Warnings> warningList = new ArrayList<>();
 	public RecyclerView warningsRecycler;
 	private DownloadJSONTask dlTask = null;

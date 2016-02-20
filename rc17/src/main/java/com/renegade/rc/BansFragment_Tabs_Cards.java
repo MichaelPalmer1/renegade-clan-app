@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class BansFragment_Tabs_Cards extends Fragment {
+public class BansFragment_Tabs_Cards extends RCFragment {
 	public ArrayList<Bans> banList = new ArrayList<>();
 	public RecyclerView bansRecycler;
 	private DownloadJSONTask dlTask = null;
@@ -74,6 +74,7 @@ public class BansFragment_Tabs_Cards extends Fragment {
 		}
 	}
 
+	@Override
 	public void tabSelected() {
 		bansRecycler.smoothScrollToPosition(0);
 	}

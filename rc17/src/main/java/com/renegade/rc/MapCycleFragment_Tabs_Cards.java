@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapCycleFragment_Tabs_Cards extends Fragment {
+public class MapCycleFragment_Tabs_Cards extends RCFragment {
     public ArrayList<Maps> mapList = new ArrayList<>();
     public RecyclerView cycleRecycler;
     private DownloadJSONTask dlTask = null;

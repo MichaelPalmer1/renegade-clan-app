@@ -8,6 +8,21 @@
     <string name="action_refresh">Refresh</string>
 
     <!-- Tab Titles -->
+    <string-array name="section_titles">
+        <item>Status</item>
+        <item>TeamSpeak</item>
+        <item>Cycle</item>
+        <item>Bans</item>
+        <item>Warnings</item>
+    </string-array>
+    <string-array name="section_classes">
+        <item>StatusFragment_Tabs_Cards</item>
+        <item>TSFragment_Tabs</item>
+        <item>MapCycleFragment_Tabs_Cards</item>
+        <item>BansFragment_Tabs_Cards</item>
+        <item>WarningsFragment_Tabs_Cards</item>
+    </string-array>
+
     <string name="title_section1">Status</string>
     <string name="title_section2">TeamSpeak</string>
     <string name="title_section3">Cycle</string>
