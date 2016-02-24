@@ -194,7 +194,11 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
         @Override
         public void onBindViewHolder(VoteViewHolder holder, int position) {
             // Map Name
-            holder.mapVoteName.setText(votes.get(position).getMapName());
+            String mapName = votes.get(position).getMapName();
+            if (mapName == null) {
+                mapName = votes.get(position).getName();
+            }
+            holder.mapVoteName.setText(mapName);
             RC.color(holder.mapVoteName);
 
             // Map Image
