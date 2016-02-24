@@ -190,7 +190,11 @@ public class MapVoteFragment extends Fragment {
             TextView mapUsage = (TextView) rowView.findViewById(R.id.mapUsage);
 
             // Map Name
-            mapVoteName.setText(vote_details.get(position).getMapName());
+            String mapName = vote_details.get(position).getMapName();
+            if (mapName == null) {
+                mapName = vote_details.get(position).getName();
+            }
+            mapVoteName.setText(mapName);
             RC.color(mapVoteName);
 
             // Map Image
