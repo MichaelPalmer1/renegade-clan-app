@@ -88,7 +88,8 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
                 JSONObject voteData = json.getJSONObject(i);
                 voteList.add( new Votes(
                         voteData.getString("name"),
-                        voteData.getString("mapname"),
+                        voteData.getString("mapname").equals("null") ?
+                                voteData.getString("name") : voteData.getString("mapname"),
                         Integer.parseInt(voteData.getString("times_played")),
                         Integer.parseInt(voteData.getString("last_played")) ,
                         Integer.parseInt(voteData.getString("total_votes")),
@@ -194,11 +195,7 @@ public class MapVoteFragment_Tabs_Cards extends Fragment {
         @Override
         public void onBindViewHolder(VoteViewHolder holder, int position) {
             // Map Name
-            String mapName = votes.get(position).getMapName();
-            if (mapName == null) {
-                mapName = votes.get(position).getName();
-            }
-            holder.mapVoteName.setText(mapName);
+            holder.mapVoteName.setText(votes.get(position).getMapName());
             RC.color(holder.mapVoteName);
 
             // Map Image

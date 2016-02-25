@@ -90,7 +90,8 @@ public class MapVoteFragment extends Fragment {
                 JSONObject voteData = json.getJSONObject(i);
                 voteList.add( new Votes(
                         voteData.getString("name"),
-                        voteData.getString("mapname"),
+                        voteData.getString("mapname").equals("null") ?
+                            voteData.getString("name") : voteData.getString("mapname"),
                         Integer.parseInt(voteData.getString("times_played")),
                         Integer.parseInt(voteData.getString("last_played")) ,
                         Integer.parseInt(voteData.getString("total_votes")),
@@ -190,11 +191,7 @@ public class MapVoteFragment extends Fragment {
             TextView mapUsage = (TextView) rowView.findViewById(R.id.mapUsage);
 
             // Map Name
-            String mapName = vote_details.get(position).getMapName();
-            if (mapName == null) {
-                mapName = vote_details.get(position).getName();
-            }
-            mapVoteName.setText(mapName);
+            mapVoteName.setText(vote_details.get(position).getMapName());
             RC.color(mapVoteName);
 
             // Map Image
